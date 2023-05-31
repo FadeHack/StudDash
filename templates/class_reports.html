@@ -4,50 +4,151 @@
     <div class="v-rule"></div>
 
     <div class="class-reports">
+        <h1>Generate Reports</h1>
+        <h4>Add Score</h4>
+        {% if session['role'] in ['admin', 'teacher'] %}
+        <div class="class-reports-container">
+            <h3>{{ session['role']|capitalize }} View</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Answers</th>
+                        <th>Score</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for class_report in class_reports %}
+                        {% if not class_report.score %}
+                            <tr>
+                                <td>{{ class_report.username }}</td>
+                                <td>
+                                    <ol>
+                                        {% for answer in class_report.answers %}
+                                            <li>{{ answer }}</li>
+                                        {% endfor %}
+                                    </ol>
+                                </td>
+                                <td>
+                                    <input type="number" name="score" class="score-input">
+                                </td>
+                                <td>
+                                    <button class="round-button save-score-btn" data-report-id="{{ class_report._id }}">Save</button>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td>{{ class_report.username }}</td>
+                                <td>
+                                    <ol>
+                                        {% for answer in class_report.answers %}
+                                            <li>{{ answer }}</li>
+                                        {% endfor %}
+                                    </ol>
+                                </td>
+                                <td>
+                                    <span class="score-label">{{ class_report.score }}</span>
+                                </td>
+                                <td>
+                                    <button class="round-button edit-score-btn" data-report-id="{{ class_report._id }}">Edit</button>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>   
+        </div>
 
-        <h1>All Students Reports</h1>
-        {% if session['role'] == 'admin' %}
-            <div class="class-reports-container">
-                <h3>Admin View</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Class Name</th>
-                            <th>Report</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for class_report in class_reports %}
-                            <tr>
-                                <td>{{ class_report.username }}</td>
-                                <!-- <td>{{ class_report.assessment_id }}</td> -->
-                                <td>{{ class_report.answers }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% elif session['role'] == 'teacher' %}
-            <div class="class-reports-container">
-                <h3>Teacher View</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Class Name</th>
-                            <th>Report</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for class_report in class_reports %}
-                            <tr>
-                                <td>{{ class_report.username }}</td>
-                                <!-- <td>{{ class_report.assessment_id }}</td> -->
-                                <td>{{ class_report.answers }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        {% else %}
+            <p>Unauthorized access.</p>
         {% endif %}
     </div>
+
+    <script>
+        function setupSaveScoreButton(button) {
+            button.addEventListener('click', () => {
+                const scoreCell = button.parentNode.previousElementSibling;
+                const scoreInput = scoreCell.querySelector('input[name="score"]');
+                const score = scoreInput.value;
+
+                // Perform necessary validation on the score value if required
+
+                const reportId = button.getAttribute('data-report-id');
+
+
+                // Create a form data object
+                const formData = new FormData();
+                formData.append('score', score);
+                formData.append('report_id', reportId.toString());
+
+
+                // Submit the form data
+                fetch('/add-score', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Success
+                        alert('Score added successfully.');
+                        // Perform any other necessary actions
+
+                        // Replace the input field with the updated score label
+                        const scoreLabel = document.createElement('span');
+                        scoreLabel.classList.add('score-label');
+                        scoreLabel.textContent = score;
+                        scoreCell.replaceChild(scoreLabel, scoreInput);
+
+                        // Change the button text back to 'Edit'
+                        button.textContent = 'Edit';
+                        button.classList.add('edit-score-btn');
+                        button.classList.remove('save-score-btn');
+                    } else {
+                        // Error
+                        alert('Failed to add score.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        }
+
+        function setupEditScoreButton(button) {
+            button.addEventListener('click', () => {
+              const scoreCell = button.parentNode.previousElementSibling;
+              let scoreInput = scoreCell.querySelector('input[name="score"]');
+              const scoreLabel = scoreCell.querySelector('.score-label');
+              const scoreValue = scoreLabel.textContent;
+          
+              if (!scoreInput) {
+                // Create an input field if it doesn't exist
+                scoreInput = document.createElement('input');
+                scoreInput.type = 'number';
+                scoreInput.name = 'score';
+                scoreInput.classList.add('score-input');
+                scoreInput.value = scoreValue;
+          
+                // Replace the score label with the input field
+                scoreCell.replaceChild(scoreInput, scoreLabel);
+          
+                // Change the button text to 'Save'
+                button.textContent = 'Save';
+                button.classList.add('save-score-btn');
+                button.classList.remove('edit-score-btn');
+          
+                // Setup the event listener for the Save button
+                setupSaveScoreButton(button);
+              }
+            });
+          }
+          
+
+        const editScoreButtons = document.querySelectorAll('.edit-score-btn');
+        editScoreButtons.forEach(button => {
+            setupEditScoreButton(button);
+        });
+
+    </script>
 {% endblock %}

@@ -4,34 +4,35 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personalized Assessment System</title>
+    <title>StudDash</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='/css/style.css') }}">
-
 </head>
 <body>
     <nav>
-        <ul>
-            <li class="icon-main"><a href="/">StudDash</a></li>
+        <div class="brand"> <a id="home-icon" href="/">StudDash</a></div>
+        <input type="checkbox" id="toggle" class="toggle-input">
+        <label for="toggle" class="toggle-label">&#9776;</label>
+        <ul class="navbar-items">
             {% if 'username' in session %}
                 {% if session['role'] == 'admin' %}
-                    <li><a href="/dashboard">Home</a></li>
-                    <li><a href="/create-assessment">Create Assessment</a></li>
-                    <li><a href="/generate-reports">Class Reports</a></li>
-                    <li><a href="/view-assessments">View Assessments</a></li>
-                    <li><a href="/individual-reports">Individual Reports</a></li>
-                    <li><a href="/add-users">Add User</a></li>
+                    <li class="navbar-item"><a href="/dashboard">Home</a></li>
+                    <li class="navbar-item"><a href="/create-assessment">Create Assessment</a></li>
+                    <li class="navbar-item"><a href="/generate-reports">Generate Reports</a></li>
+                    <li class="navbar-item"><a href="/view-assessments">View Assessments</a></li>
+                    <li class="navbar-item"><a href="/individual-reports">Individual Reports</a></li>
+                    <li class="navbar-item"><a href="/add-users">Add User</a></li>
                 {% elif session['role'] == 'teacher' %}
-                    <li><a href="/dashboard">Home</a></li>
-                    <li><a href="/create-assessment">Create Assessment</a></li>
-                    <li><a href="/view-assessments">View Assessments</a></li>
-                    <li><a href="/generate-reports">Class Reports</a></li>
-                    <li><a href="/individual-reports">Individual Reports</a></li>
+                    <li class="navbar-item"><a href="/dashboard">Home</a></li>
+                    <li class="navbar-item"><a href="/create-assessment">Create Assessment</a></li>
+                    <li class="navbar-item"><a href="/view-assessments">View Assessments</a></li>
+                    <li class="navbar-item"><a href="/generate-reports">Generate Reports</a></li>
+                    <li class="navbar-item"><a href="/individual-reports">Individual Reports</a></li>
                 {% elif session['role'] == 'student' %}
-                    <li><a href="/dashboard">Home</a></li>
-                    <li><a href="/take-assessment">Take Assessment</a></li>
-                    <li><a href="/view-results">View Results</a></li>
+                    <li class="navbar-item"><a href="/dashboard">Home</a></li>
+                    <li class="navbar-item"><a href="/take-assessment">Take Assessment</a></li>
+                    <li class="navbar-item"><a href="/view-results">View Results</a></li>
                 {% endif %}
-                <li style="float: right;"><a href="/logout">Logout</a></li>
+                <li class="navbar-item right"><a href="/logout">Logout</a></li>
             {% endif %}
         </ul>
     </nav>

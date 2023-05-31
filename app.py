@@ -30,6 +30,8 @@ def index():
         return render_template('dashboard.html')
     return render_template('login.html')
 
+# login
+
 @app.route('/login', methods=['POST'])
 def login():
     username = request.form['username']
@@ -51,12 +53,17 @@ def logout():
     session.clear()
     return redirect('/')
 
+# dashboard
+
 @app.route('/dashboard')
 def dashboard():
     if 'username' in session:
         return render_template('dashboard.html')
     else:
         return redirect('/')
+    
+
+# create assessment
 
 @app.route('/create-assessment')
 def create_assessment():
@@ -84,6 +91,10 @@ def save_assessment():
     else:
         return redirect('/')
 
+
+# class reports
+
+
 @app.route('/generate-reports')
 def generate_reports():
     if 'username' in session and session['role'] in ['admin', 'teacher']:
@@ -93,6 +104,25 @@ def generate_reports():
         return redirect('/')
 
 
+@app.route('/add-score', methods=['POST'])
+def add_score():
+    if 'username' in session and session['role'] in ['admin', 'teacher']:
+        score = request.form.get('score')
+        report_id = request.form.get('report_id')
+        
+        # Update the score in the results collection
+        result = results_collection.find_one({'_id': ObjectId(report_id)})
+        if result:
+            result['score'] = score
+            results_collection.update_one({'_id': ObjectId(report_id)}, {'$set': result})
+            return 'Score added successfully.'
+        else:
+            return 'Report not found.', 404
+    else:
+        return 'Unauthorized', 401
+
+
+# individual reports
 
 @app.route('/individual-reports')
 def individual_reports():
@@ -110,11 +140,12 @@ def search_results():
         if result:
             return render_template('view_results.html', results=[result])
         else:
-            return render_template('no_results.html', username=username)
+            return render_template('no_result.html', username=username)
     else:
         return redirect('/')
 
 
+# view assessment
 
 @app.route('/view-assessments')
 def view_assessments():
@@ -123,6 +154,8 @@ def view_assessments():
         return render_template('view_assessments.html', assessments=assessments)
     else:
         return redirect('/')
+
+# take assessment
 
 @app.route('/take-assessment')
 def take_assessment():
@@ -158,10 +191,18 @@ def submit_assessment():
                 answer_index = int(key.split('_')[1])
                 answers.append(value)
 
+        # Get the assessment title
+        assessment = assessments_collection.find_one({'_id': ObjectId(assessment_id)})
+        if assessment:
+            assessment_title = assessment['title']
+        else:
+            return jsonify({'error': 'Assessment not found'})
+
         # Save student's answers to MongoDB
         result = {
             'username': session['username'],
             'assessment_id': assessment_id,
+            'assessment_title': assessment_title,  # Add the assessment title
             'answers': answers
         }
         results_collection.insert_one(result)
@@ -172,6 +213,9 @@ def submit_assessment():
 
 
 
+# view results
+
+
 @app.route('/view-results')
 def view_results():
     if 'username' in session and session['role'] == 'student':
@@ -180,6 +224,8 @@ def view_results():
     else:
         return redirect('/')
 
+
+# add users
 
 @app.route('/add-users', methods=['GET', 'POST'])
 def add_users():
@@ -204,7 +250,6 @@ def add_users():
         return redirect('/')
 
 
-# Add other routes and functionalities as needed
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host = '192.168.0.104')

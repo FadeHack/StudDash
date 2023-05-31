@@ -10,7 +10,7 @@
                 {% for result in results %}
                     <div class="result-card">
                         <h4>Username: {{ result.username }}</h4>
-                        <h4>Assessment: {{ result.assessment_id }}</h4>
+                        <h4>Assessment: {{ result.assessment_title }}</h4>  <!-- Display the assessment title -->
                         <ul class="answer-list">
                             <h4>Answers: </h4>
                             {% for answer in result.answers %}
