@@ -52,7 +52,7 @@ Below are the screenshots of different parts of the Assessment Management System
    [![Individual Reports](static/screenshots/ir.png)](static/screenshots/ir.png)
 
 5. Class Reports (Admin & Teacher):
-   [![Class Reports](static/screenshots/cr.png)](static/screenshots/cr.png)
+   [![Class Reports](static/screenshots/cp.png)](static/screenshots/cp.png)
 
 6. View Assessment (Admin & Teacher):
    [![View Assessment](static/screenshots/va.png)](static/screenshots/va.png)
