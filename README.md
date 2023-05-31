@@ -76,7 +76,7 @@ To run the Assessment Management System on your local machine, follow the steps 
 2. Clone this repository: `git clone https://github.com/your-username/assessment-management-system.git`
 3. Navigate to the project directory: `cd assessment-management-system`
 4. Install the required dependencies: `pip install -r requirements.txt`
-5. Set up the MongoDB connection using your uri in app.py.
+5. Set up the MongoDB connection by creating a database with required collections on mongoDB Atlas.
 6. Run the application: `python app.py`
 7. Open your web browser and access the application at: `http://localhost:5000`
 
