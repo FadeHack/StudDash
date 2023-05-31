@@ -38,9 +38,11 @@ Below are the screenshots of different parts of the Assessment Management System
 1. Login Page:
    [![Login Page](static/screenshots/home.png)](static/screenshots/home.png)
 
-2. Dashboard:
+2. Admin/Teacher Dashboard:
    [![Admin Dashboard](static/screenshots/od1.png)](static/screenshots/od1.png)
    [![Admin Dashboard](static/screenshots/od2.png)](static/screenshots/od2.png)
+
+   Student Dashboard:
    [![Student Dashboard](static/screenshots/sd.png)](static/screenshots/sd.png)
 
 3. Create Assessment (Admin & Teacher):
