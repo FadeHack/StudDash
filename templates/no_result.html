@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="v-rule"></div>
+
+    <div class="no-result-container">
+        <h2 class="no-result-title">No Results Found</h2>
+        <p class="no-result-message">No results found for username: {{ username }}</p>
+        <a href="/dashboard" class="no-res-btn no-res-btn-primary">Go Back to Dashboard</a>
+    </div>
+{% endblock %}

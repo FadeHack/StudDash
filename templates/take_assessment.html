@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="v-rule"></div>
+
+    <div class="take-assessment">
+        <h1>Take Assessment</h1>
+        {% if assessments %}
+            <form id="assessment-form" action="/submit-assessment" method="POST">
+                <select name="assessment_id" id="assessment-select">
+                    {% for assessment in assessments %}
+                        <option value="{{ assessment._id }}">{{ assessment.title }}</option>
+                    {% endfor %}
+                </select>
+                <br><br>
+                <button type="button" id="select-button">Select</button>
+                <br><br>
+                <h3 id="questions-heading" style="display: none;">Questions:</h3>
+                <div id="questions-container" style="display: none;"></div>
+                <br>
+                <input type="submit" value="Submit" class="submit-btn" style="display: none;">
+            </form>
+        {% else %}
+            <p>No assessments available.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        const selectButton = document.getElementById('select-button');
+        const questionsHeading = document.getElementById('questions-heading');
+        const questionsContainer = document.getElementById('questions-container');
+        const submitButton = document.querySelector('.submit-btn');
+        const assessmentSelect = document.getElementById('assessment-select');
+        let selected_assessment_id = null;
+
+        selectButton.addEventListener('click', () => {
+            const selectedAssessmentId = assessmentSelect.value;
+
+            if (selectedAssessmentId) {
+                questionsHeading.style.display = 'block';
+                questionsContainer.style.display = 'block';
+                submitButton.style.display = 'block';
+                selected_assessment_id = selectedAssessmentId;
+                fetchQuestions(selectedAssessmentId);
+            } else {
+                questionsHeading.style.display = 'none';
+                questionsContainer.style.display = 'none';
+                submitButton.style.display = 'none';
+                selected_assessment_id = null;
+                questionsContainer.innerHTML = '';
+            }
+        });
+
+        function fetchQuestions(assessmentId) {
+            // Make an AJAX request to fetch the assessment data
+            const url = `/get-assessment/${assessmentId}`;
+            fetch(url)
+              .then(response => response.json())
+              .then(data => {
+                const assessment = data.assessment;
+                const questions = assessment.questions.split(' &x ');
+                const justification = assessment.justification.split(' &x ');
+          
+                // Generate the question answer fields dynamically
+                let questionsHTML = '';
+                for (let i = 0; i < questions.length; i++) {
+                  questionsHTML += `
+                    <h4>${questions[i]}</h4>
+                    <p class="justification-box">Hint : ${justification[i]}</p>
+                    <input type="text" name="answer_${i}" class="answer-input">
+                  `;
+                }
+          
+                // Update the questions container with the generated fields
+                questionsContainer.innerHTML = questionsHTML;
+              })
+              .catch(error => {
+                console.error('Error:', error);
+              });
+        }
+
+        submitButton.addEventListener('click', (event) => {
+            event.preventDefault();
+
+            // Collect all answer inputs
+            const answerInputs = document.querySelectorAll('.answer-input');
+            const answers = Array.from(answerInputs).map(input => input.value);
+
+            // Make sure an assessment is selected and at least one answer is provided
+            if (selected_assessment_id && answers.length > 0) {
+                // Create a form data object
+                const formData = new FormData();
+                formData.append('assessment_id', selected_assessment_id);
+                answers.forEach((answer, index) => {
+                    formData.append(`answer_${index}`, answer);
+                });
+
+                // Submit the form data
+                fetch('/submit-assessment', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Success
+                        alert('Assessment submitted successfully.');
+                        location.reload(); // Refresh the page
+                    } else {
+                        // Error
+                        alert('Failed to submit assessment.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            } else {
+                alert('Please select an assessment and provide at least one answer.');
+            }
+        });
+    </script>
+{% endblock %}

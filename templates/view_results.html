@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="v-rule"></div>
+
+    <div class="results-container">
+        <h1>View Results</h1>
+        {% if results %}
+            <div class="results">
+                {% for result in results %}
+                    <div class="result-card">
+                        <h4>Username: {{ result.username }}</h4>
+                        <h4>Assessment: {{ result.assessment_id }}</h4>
+                        <ul class="answer-list">
+                            <h4>Answers: </h4>
+                            {% for answer in result.answers %}
+                                <li>{{ loop.index }}. {{ answer }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No results available.</p>
+        {% endif %}
+    </div>
+{% endblock %}

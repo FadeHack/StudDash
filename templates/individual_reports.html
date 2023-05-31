@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="v-rule"></div>
+
+    <div class="individual-reports">
+        <h1 class="indi-rep-title">Individual Reports</h1>
+        <div class="individual-reports-container">
+            {% if session['role'] in ['admin', 'teacher'] %}
+                <h2 class="indi-rep-search">Search by Username</h2>
+                <form class="indi-rep-form" action="/search-results" method="POST">
+                    <input class="indi-rep-input" type="text" name="username" placeholder="Enter username" required>
+                    <button class="indi-rep-button" type="submit">Search</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="v-rule"></div>
+
+    <div class="view-assessments-container">
+        <h3>View Assessments</h3>
+        {% if assessments %}
+            <div class="assessment">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Questions</th>
+                            <th>Justification</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for assessment in assessments %}
+                            <tr>
+                                <td>{{ assessment.title }}</td>
+                                <td>{{ assessment.questions }}</td>
+                                <td>{{ assessment.justification }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>No assessments available.</p>
+        {% endif %}
+    </div>
+{% endblock %}

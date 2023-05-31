@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="v-rule"></div>
+
+    <div class="class-reports">
+
+        <h1>All Students Reports</h1>
+        {% if session['role'] == 'admin' %}
+            <div class="class-reports-container">
+                <h3>Admin View</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Class Name</th>
+                            <th>Report</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for class_report in class_reports %}
+                            <tr>
+                                <td>{{ class_report.username }}</td>
+                                <!-- <td>{{ class_report.assessment_id }}</td> -->
+                                <td>{{ class_report.answers }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% elif session['role'] == 'teacher' %}
+            <div class="class-reports-container">
+                <h3>Teacher View</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Class Name</th>
+                            <th>Report</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for class_report in class_reports %}
+                            <tr>
+                                <td>{{ class_report.username }}</td>
+                                <!-- <td>{{ class_report.assessment_id }}</td> -->
+                                <td>{{ class_report.answers }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

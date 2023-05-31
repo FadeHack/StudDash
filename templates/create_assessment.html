@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="v-rule"></div>
+
+<div class="create-assessment-container">
+        <h1>Create Assessment</h1>
+        <form method="POST" action="/save-assessment">
+            <label for="title">Assessment Title:</label>
+            <input type="text" id="title" name="title" required><br><br>
+    
+            <label for="questions">Questions:</label>
+            <textarea id="questions" name="questions" rows="5" placeholder="Use &x to seperate the questions" required></textarea><br><br>
+    
+            <label for="justification">Justification:</label>
+            <textarea id="justification" name="justification" rows="5" placeholder="Use &x to seperate the justification for all questions" required></textarea><br><br>
+    
+            <input type="submit" value="Create Assessment">
+        </form>
+    </div>
+{% endblock %}

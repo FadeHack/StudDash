@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="v-rule"></div>
+
+    <div class="dashboard-container">
+        <h1>Dashboard</h1>
+    
+        <h2>Welcome, {{ session['username'] }}!</h2> <!-- Displaying the username -->
+    
+        {% if session['role'] == 'admin' %}
+        <!-- Content for admin role -->
+        <h3>[ADMIN]</h3>
+        <div class="dashboard-cards">
+                <a href="/add-users" class="dashboard-card">
+                    <img src="{{ url_for('static', filename='images/users.png') }}" alt="Add Users">
+                    <h4>Add Users</h4>
+                    <p>Add new teachers and students</p>
+                </a>
+                <a href="/create-assessment" class="dashboard-card">
+                    <img src="{{ url_for('static', filename='images/assessment.png') }}" alt="Create Assessment">
+                    <h4>Create Assessment</h4>
+                    <p>Create and manage assessments</p>
+                </a>
+                <a href="/view-assessments" class="dashboard-card">
+                    <img src="{{ url_for('static', filename='images/vassessment.png') }}" alt="View Assessments">
+                    <h4>View Assessments</h4>
+                    <p>View and manage existing assessments</p>
+                </a>
+                <a href="/generate-reports" class="dashboard-card">
+                    <img src="{{ url_for('static', filename='images/crep.png') }}" alt="Class Reports">
+                    <h4>Class Reports</h4>
+                    <p>Generate reports for classes</p>
+                </a>
+                <a href="/individual-reports" class="dashboard-card">
+                    <img src="{{ url_for('static', filename='images/irep.jpg') }}" alt="Individual Reports">
+                    <h4>Individual Reports</h4>
+                    <p>View individual reports</p>
+                </a>
+            </div>
+        {% elif session['role'] == 'teacher' %}
+            <!-- Content for teacher role -->
+            <h3>[TEACHER]</h3>
+            <div class="dashboard-cards">
+                <a href="/create-assessment" class="dashboard-card">
+                    <img src="{{ url_for('static', filename='images/assessment.png') }}" alt="Create Assessment">
+                    <h4>Create Assessment</h4>
+                    <p>Create and manage assessments</p>
+                </a>
+                <a href="/view-assessments" class="dashboard-card">
+                    <img src="{{ url_for('static', filename='images/vassessment.png') }}" alt="View Assessments">
+                    <h4>View Assessments</h4>
+                    <p>View and manage existing assessments</p>
+                </a>
+                <a href="/generate-reports" class="dashboard-card">
+                    <img src="{{ url_for('static', filename='images/crep.png') }}" alt="Class Reports">
+                    <h4>Class Reports</h4>
+                    <p>Generate reports for classes</p>
+                </a>
+                <a href="/individual-reports" class="dashboard-card">
+                    <img src="{{ url_for('static', filename='images/irep.jpg') }}" alt="Individual Reports">
+                    <h4>Individual Reports</h4>
+                    <p>View individual reports</p>
+                </a>
+            </div>
+        {% elif session['role'] == 'student' %}
+            <!-- Content for student role -->
+            <h3>[STUDENT]</h3>
+            <div class="dashboard-cards">
+                <a href="/take-assessment" class="dashboard-card">
+                    <img src="{{ url_for('static', filename='images/tassessment.png') }}" alt="Take Assessment">
+                    <h4>Take Assessment</h4>
+                    <p>Take available assessments</p>
+                </a>
+                <a href="/view-results" class="dashboard-card">
+                    <img src="{{ url_for('static', filename='images/irep.jpg') }}" alt="View Results">
+                    <h4>View Results</h4>
+                    <p>View assessment results</p>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

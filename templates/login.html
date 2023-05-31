@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="login-back">
+
+        <div class="log-head">
+            <h1>Welcome To StudDash</h1>
+    
+        </div>
+        <div class="login-container">
+            <h1>Login</h1>
+            <form method="POST" action="/login">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required><br><br>
+        
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required><br><br>
+        
+                <label for="role">Role:</label>
+                <select id="role" name="role" required>
+                    <option value="admin">Admin</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="student">Student</option>
+                </select><br><br>
+        
+                <input type="submit" value="Login">
+            </form>
+        </div>
+    </div>
+{% endblock %}
