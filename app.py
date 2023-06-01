@@ -273,4 +273,4 @@ def add_users():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host = '192.168.0.104')
+    app.run(debug=True)
