@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StudDash</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='/css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <nav>
@@ -18,13 +19,13 @@
                     <li class="navbar-item"><a href="/dashboard">Home</a></li>
                     <li class="navbar-item"><a href="/create-assessment">Create Assessment</a></li>
                     <li class="navbar-item"><a href="/generate-reports">Generate Reports</a></li>
-                    <li class="navbar-item"><a href="/view-assessments">View Assessments</a></li>
+                    <li class="navbar-item"><a href="/view-assessments">Manage Assessments</a></li>
                     <li class="navbar-item"><a href="/individual-reports">Individual Reports</a></li>
                     <li class="navbar-item"><a href="/add-users">Add User</a></li>
                 {% elif session['role'] == 'teacher' %}
                     <li class="navbar-item"><a href="/dashboard">Home</a></li>
                     <li class="navbar-item"><a href="/create-assessment">Create Assessment</a></li>
-                    <li class="navbar-item"><a href="/view-assessments">View Assessments</a></li>
+                    <li class="navbar-item"><a href="/view-assessments">Manage Assessments</a></li>
                     <li class="navbar-item"><a href="/generate-reports">Generate Reports</a></li>
                     <li class="navbar-item"><a href="/individual-reports">Individual Reports</a></li>
                 {% elif session['role'] == 'student' %}

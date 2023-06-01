@@ -2,13 +2,14 @@
 
 {% block content %}
     <div class="login-back">
-
         <div class="log-head">
             <h1>Welcome To StudDash</h1>
-    
         </div>
         <div class="login-container">
             <h1>Login</h1>
+            {% if error %}
+                <div class="alert alert-danger" role="alert">{{ error }}</div>
+            {% endif %}
             <form method="POST" action="/login">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required><br><br>

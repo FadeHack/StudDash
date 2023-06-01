@@ -2,21 +2,41 @@
 
 {% block content %}
     <div class="v-rule"></div>
-
+    
     <div class="results-container">
-        <h1>View Results</h1>
         {% if results %}
+        <h1>Results</h1>
+        <h3>Analytics</h3>
+        <div class="chart-container">
+            <div class="chart-row">
+                <canvas id="bar-chart"></canvas>
+                <canvas id="line-chart"></canvas>
+            </div>
+            <div class="chart-row">
+                <canvas id="radial-chart"></canvas>
+                <canvas id="donut-chart"></canvas>
+            </div>
+        </div>
+        <div class="v-rule"></div>
+        <h3>Assessment Scores</h3>
             <div class="results">
                 {% for result in results %}
                     <div class="result-card">
                         <h4>Username: {{ result.username }}</h4>
-                        <h4>Assessment: {{ result.assessment_title }}</h4>  <!-- Display the assessment title -->
+                        <h4>Assessment: {{ result.assessment_title }}</h4>
                         <ul class="answer-list">
-                            <h4>Answers: </h4>
+                            <h4>Answers:</h4>
                             {% for answer in result.answers %}
                                 <li>{{ loop.index }}. {{ answer }}</li>
                             {% endfor %}
                         </ul>
+                        {% if result.score %}
+                            <h4 class="score">Score: {{ result.score }}</h4>
+                            <h5>M.M. : 100</h5>
+                            <canvas class="pie-chart"></canvas>
+                            {% else %}
+                            <h4>Score: [Awaited]</h4>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>
@@ -24,4 +44,129 @@
             <p>No results available.</p>
         {% endif %}
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Retrieve scores from the rendered HTML
+            const scoreElements = document.getElementsByClassName('score');
+            const scores = Array.from(scoreElements).map(element => parseFloat(element.textContent.replace('Score: ', '')));
+    
+            // Retrieve assessment titles from the rendered HTML
+            const assessmentTitleElements = Array.from(document.querySelectorAll('.result-card h4')).filter(element => element.textContent.includes('Assessment:'));
+            const assessmentTitles = assessmentTitleElements.map(element => element.textContent.replace('Assessment: ', ''));
+    
+            // Bar chart
+            const barChartCanvas = document.getElementById('bar-chart').getContext('2d');
+            new Chart(barChartCanvas, {
+                type: 'bar',
+                data: {
+                    labels: assessmentTitles,
+                    datasets: [{
+                        label: 'Scores',
+                        data: scores,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 120
+                        }
+                    }
+                }
+            });
+    
+            // Line chart
+            const lineChartCanvas = document.getElementById('line-chart').getContext('2d');
+            new Chart(lineChartCanvas, {
+                type: 'line',
+                data: {
+                    labels: assessmentTitles,
+                    datasets: [{
+                        label: 'Scores',
+                        data: scores,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 120
+                        }
+                    }
+                }
+            });
+
+
+            // Radial chart
+            const radialChartCanvas = document.getElementById('radial-chart').getContext('2d');
+            new Chart(radialChartCanvas, {
+                type: 'radar',
+                data: {
+                    labels: assessmentTitles,
+                    datasets: [{
+                        label: 'Scores',
+                        data: scores,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {}
+            });
+
+        // Sum all scores
+        const totalScore = scores.reduce((sum, score) => sum + score, 0);
+
+        // Calculate the maximum possible score
+        const maxScore = 100 * scores.length;
+                
+        // Calculate the deducted marks
+        const deductedMarks = maxScore - totalScore;
+                
+        // Donut chart
+        const donutChartCanvas = document.getElementById('donut-chart').getContext('2d');
+        new Chart(donutChartCanvas, {
+            type: 'doughnut',
+            data: {
+                labels: ['Marks Obtained', 'Deducted Marks'],
+                datasets: [{
+                    data: [totalScore, deductedMarks],
+                    backgroundColor: ['rgba(54, 162, 235, 0.5)', 'rgba(255, 99, 132, 0.5)'],
+                    borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {}
+        });
+
+
+
+            // Pie charts
+            const pieChartCanvases = document.getElementsByClassName('pie-chart');
+            Array.from(pieChartCanvases).forEach((canvas, index) => {
+                new Chart(canvas.getContext('2d'), {
+                    type: 'pie',
+                    data: {
+                        labels: ['Marks Obtained', 'Deducted Marks'],
+                        datasets: [{
+                            data: [scores[index], 100 - scores[index]],
+                            backgroundColor: ['rgba(54, 162, 235, 0.5)', 'rgba(255, 99, 132, 0.5)'],
+                            borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {}
+                });
+            });
+        });
+    </script>
 {% endblock %}

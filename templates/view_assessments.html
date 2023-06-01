@@ -4,7 +4,7 @@
     <div class="v-rule"></div>
 
     <div class="view-assessments-container">
-        <h3>View Assessments</h3>
+        <h3>View & Manage Assessments</h3>
         {% if assessments %}
             <div class="assessment">
                 <table>
@@ -13,6 +13,7 @@
                             <th>Title</th>
                             <th>Questions</th>
                             <th>Justification</th>
+                            <th>Action</th> <!-- Added column for delete button -->
                         </tr>
                     </thead>
                     <tbody>
@@ -21,6 +22,11 @@
                                 <td>{{ assessment.title }}</td>
                                 <td>{{ assessment.questions }}</td>
                                 <td>{{ assessment.justification }}</td>
+                                <td>
+                                    <form method="POST" action="/delete-assessment/{{ assessment._id }}">
+                                        <button type="submit" class="delete-button">Delete</button>
+                                    </form>
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>

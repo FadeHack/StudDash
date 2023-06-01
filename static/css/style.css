@@ -1,7 +1,7 @@
 /* Global Styles */
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: monospace;
   margin: 0;
   padding: 0;
   background-color: #f8f8f8;
@@ -59,7 +59,7 @@ nav {
   font-family: monospace;
   padding: 14px 16px;
   float: left;
-  margin-right: 20%;
+  margin-right: 5%;
 }
 
 .navbar-items {
@@ -224,6 +224,22 @@ nav {
 .login-container input[type="submit"]:hover {
   background-color: #333;
 }
+
+
+.alert {
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+
 
 
 /* Dashboard Styles */
@@ -507,6 +523,7 @@ nav {
 
 .results-container {
   text-align: center;
+  flex-wrap: wrap;
 }
 
 .results {
@@ -517,7 +534,8 @@ nav {
 }
 
 .result-card {
-  width: 300px;
+  width: 280px;
+  height: auto;
   background-color: #dbd7d7;
   border-radius: 8px;
   padding: 20px;
@@ -549,6 +567,37 @@ nav {
   font-size: 24px;
   margin-bottom: 20px;
 }
+
+.chart-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.chart-row {
+  display: flex;
+  justify-content:center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  height: 40vh;
+}
+
+
+
+.chart-row canvas {
+  margin: 10px;
+  height: auto;
+  background-color: #f4f2f5;
+}
+
+
+@media (max-width: 768px) {
+  .chart-row {
+    height: 30%;
+  }
+}
+
 
 /* View Assessments Styles */
 .view-assessments-container {
@@ -593,6 +642,17 @@ nav {
   font-size: 18px;
 }
 
+.delete-button{
+  display: inline-block;
+  border-radius: 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 6px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
 
 
 
@@ -612,11 +672,13 @@ nav {
 }
 
 .class-reports h4{
+  font-size: large;
   animation: backgroundChange 2s infinite;
 }
 
 .class-reports-container {
   margin-top: 30px;
+  width: 80%;
 }
 
 .class-reports-container h3 {
@@ -633,6 +695,7 @@ nav {
 .class-reports-container table td {
   padding: 10px;
   text-align: left;
+
   border-bottom: 1px solid #ccc;
 }
 
@@ -641,7 +704,7 @@ nav {
   font-weight: bold;
 }
 
-.class-reports-container .score-input {
+.class-reports-container .score-input , .class-reports-container .score-label{
   width: 60px;
   padding: 6px;
   border: 1px solid #ccc;
@@ -660,6 +723,10 @@ nav {
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s;
+}
+
+.class-reports-container .edit-score-btn{
+  margin-left: 4vb;
 }
 
 .class-reports-container .round-button:hover {

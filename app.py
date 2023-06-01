@@ -32,21 +32,26 @@ def index():
 
 # login
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    username = request.form['username']
-    password = request.form['password']
-    role = request.form['role']
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        role = request.form['role']
 
-    # Check user credentials from MongoDB
-    user = users_collection.find_one({'username': username, 'password': password, 'role': role})
+        # Check user credentials from MongoDB
+        user = users_collection.find_one({'username': username, 'password': password, 'role': role})
 
-    if user:
-        session['username'] = user['username']
-        session['role'] = user['role']
-        return redirect('/dashboard')
+        if user:
+            session['username'] = user['username']
+            session['role'] = user['role']
+            return redirect('/dashboard')
+        else:
+            error = 'Invalid username, password, or role. Please try again.'
+            return render_template('login.html', error=error)
     else:
-        return redirect('/')
+        return render_template('login.html')
+
 
 @app.route('/logout')
 def logout():
@@ -122,6 +127,7 @@ def add_score():
         return 'Unauthorized', 401
 
 
+
 # individual reports
 
 @app.route('/individual-reports')
@@ -135,10 +141,12 @@ def individual_reports():
 def search_results():
     if 'username' in session and session['role'] in ['admin', 'teacher']:
         username = request.form['username']
-        result = results_collection.find_one({'username': username})
+        results = list(results_collection.find({'username': username}))
 
-        if result:
-            return render_template('view_results.html', results=[result])
+        count = len(results)  # Get the count of matched documents
+
+        if count > 0:
+            return render_template('view_results.html', results=results)
         else:
             return render_template('no_result.html', username=username)
     else:
@@ -221,6 +229,19 @@ def view_results():
     if 'username' in session and session['role'] == 'student':
         results = results_collection.find({'username': session['username']})
         return render_template('view_results.html', results=results)
+    else:
+        return redirect('/')
+
+@app.route('/delete-assessment/<assessment_id>', methods=['POST'])
+def delete_assessment(assessment_id):
+    if 'username' in session and session['role'] in ['admin', 'teacher']:
+        # Delete the assessment from the assessments collection
+        assessments_collection.delete_one({'_id': ObjectId(assessment_id)})
+        
+        # Delete the results associated with the assessment
+        results_collection.delete_many({'assessment_id': assessment_id})
+        
+        return redirect('/view-assessments')
     else:
         return redirect('/')
 

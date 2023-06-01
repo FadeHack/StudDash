@@ -15,51 +15,33 @@
                         <th>Username</th>
                         <th>Answers</th>
                         <th>Score</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for class_report in class_reports %}
-                        {% if not class_report.score %}
-                            <tr>
-                                <td>{{ class_report.username }}</td>
-                                <td>
-                                    <ol>
-                                        {% for answer in class_report.answers %}
-                                            <li>{{ answer }}</li>
-                                        {% endfor %}
-                                    </ol>
-                                </td>
-                                <td>
-                                    <input type="number" name="score" class="score-input">
-                                </td>
-                                <td>
-                                    <button class="round-button save-score-btn" data-report-id="{{ class_report._id }}">Save</button>
-                                </td>
-                            </tr>
-                        {% else %}
-                            <tr>
-                                <td>{{ class_report.username }}</td>
-                                <td>
-                                    <ol>
-                                        {% for answer in class_report.answers %}
-                                            <li>{{ answer }}</li>
-                                        {% endfor %}
-                                    </ol>
-                                </td>
-                                <td>
+                        <tr>
+                            <td>{{ class_report.username }}</td>
+                            <td>
+                                <ol>
+                                    {% for answer in class_report.answers %}
+                                        <li>{{ answer }}</li>
+                                    {% endfor %}
+                                </ol>
+                            </td>
+                            <td>
+                                {% if class_report.score %}
                                     <span class="score-label">{{ class_report.score }}</span>
-                                </td>
-                                <td>
                                     <button class="round-button edit-score-btn" data-report-id="{{ class_report._id }}">Edit</button>
-                                </td>
-                            </tr>
-                        {% endif %}
+                                {% else %}
+                                    <input type="number" name="score" class="score-input">
+                                    <button class="round-button save-score-btn" data-report-id="{{ class_report._id }}">Save</button>
+                                {% endif %}
+                            </td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>   
         </div>
-
         {% else %}
             <p>Unauthorized access.</p>
         {% endif %}
@@ -68,7 +50,7 @@
     <script>
         function setupSaveScoreButton(button) {
             button.addEventListener('click', () => {
-                const scoreCell = button.parentNode.previousElementSibling;
+                const scoreCell = button.parentNode;
                 const scoreInput = scoreCell.querySelector('input[name="score"]');
                 const score = scoreInput.value;
 
@@ -76,12 +58,10 @@
 
                 const reportId = button.getAttribute('data-report-id');
 
-
                 // Create a form data object
                 const formData = new FormData();
                 formData.append('score', score);
-                formData.append('report_id', reportId.toString());
-
+                formData.append('report_id', reportId);
 
                 // Submit the form data
                 fetch('/add-score', {
@@ -98,12 +78,16 @@
                         const scoreLabel = document.createElement('span');
                         scoreLabel.classList.add('score-label');
                         scoreLabel.textContent = score;
-                        scoreCell.replaceChild(scoreLabel, scoreInput);
+                        scoreCell.removeChild(scoreInput);
+                        scoreCell.insertBefore(scoreLabel, button);
 
-                        // Change the button text back to 'Edit'
-                        button.textContent = 'Edit';
+                        // Replace the save button with the edit button
                         button.classList.add('edit-score-btn');
                         button.classList.remove('save-score-btn');
+                        button.textContent = 'Edit';
+
+                        // Setup the event listener for the edit button
+                        setupEditScoreButton(button);
                     } else {
                         // Error
                         alert('Failed to add score.');
@@ -117,38 +101,38 @@
 
         function setupEditScoreButton(button) {
             button.addEventListener('click', () => {
-              const scoreCell = button.parentNode.previousElementSibling;
-              let scoreInput = scoreCell.querySelector('input[name="score"]');
-              const scoreLabel = scoreCell.querySelector('.score-label');
-              const scoreValue = scoreLabel.textContent;
-          
-              if (!scoreInput) {
-                // Create an input field if it doesn't exist
-                scoreInput = document.createElement('input');
+                const scoreCell = button.parentNode;
+                const scoreLabel = scoreCell.querySelector('.score-label');
+                const scoreValue = scoreLabel.textContent;
+
+                // Replace the score label with an input field
+                const scoreInput = document.createElement('input');
                 scoreInput.type = 'number';
                 scoreInput.name = 'score';
                 scoreInput.classList.add('score-input');
                 scoreInput.value = scoreValue;
-          
-                // Replace the score label with the input field
-                scoreCell.replaceChild(scoreInput, scoreLabel);
-          
-                // Change the button text to 'Save'
-                button.textContent = 'Save';
+
+                scoreCell.removeChild(scoreLabel);
+                scoreCell.insertBefore(scoreInput, button);
+
+                // Replace the edit button with the save button
                 button.classList.add('save-score-btn');
                 button.classList.remove('edit-score-btn');
-          
-                // Setup the event listener for the Save button
+                button.textContent = 'Save';
+
+                // Setup the event listener for the save button
                 setupSaveScoreButton(button);
-              }
             });
-          }
-          
+        }
+
+        const saveScoreButtons = document.querySelectorAll('.save-score-btn');
+        saveScoreButtons.forEach(button => {
+            setupSaveScoreButton(button);
+        });
 
         const editScoreButtons = document.querySelectorAll('.edit-score-btn');
         editScoreButtons.forEach(button => {
             setupEditScoreButton(button);
         });
-
     </script>
 {% endblock %}
