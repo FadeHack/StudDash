@@ -71,7 +71,7 @@ Below are the screenshots of different parts of the Assessment Management System
 
    ![Generate Reports](static/screenshots/gr.png)
    
-   This screenshot presents the generate reports page, where admin and teacher users can generate class reports with aggregated assessment data.
+   This screenshot presents the generate reports page, where admin and teacher users can generate reports  i.e. Add scores.
 
 6. **Take Assessment (Student):**
 
