@@ -4,7 +4,6 @@ from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Set a secret key for session management
 
 uri = 'mongodb+srv://Temp_User:9BH1EM6p6LWStCxt@mongodatabase.ytbk03l.mongodb.net/?retryWrites=true&w=majority'
 
